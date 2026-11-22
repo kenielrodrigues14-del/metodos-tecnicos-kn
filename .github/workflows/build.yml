@@ -1,3 +1,4 @@
+
 name: Gerar APK
 
 on:
@@ -10,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +27,12 @@ jobs:
       - name: Extrair projeto
         run: |
           unzip -q metodos_tecnicos_android_inicio.zip -d appsrc
-          ls -la appsrc
+          ls -la appsrc/metodos_tecnicos_flutter
+
+      - name: Criar estrutura Android
+        working-directory: appsrc/metodos_tecnicos_flutter
+        run: |
+          flutter create --platforms=android .
 
       - name: Compilar APK
         working-directory: appsrc/metodos_tecnicos_flutter
