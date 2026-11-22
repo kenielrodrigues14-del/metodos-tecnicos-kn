@@ -1,0 +1,41 @@
+name: Gerar APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'metodos_tecnicos_android_inicio.zip'
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Extrair projeto
+        run: |
+          unzip -q metodos_tecnicos_android_inicio.zip -d appsrc
+          ls -la appsrc
+
+      - name: Compilar APK
+        working-directory: appsrc/metodos_tecnicos_flutter
+        run: |
+          flutter pub get
+          flutter build apk --release \
+            --dart-define=SUPABASE_URL=https://qteoohevgetmaphuayjx.supabase.co \
+            --dart-define=SUPABASE_ANON_KEY=sb_publishable_bsMAo2yxiNMkEGdN5VEWRw_rbsbWvK-
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aplicativo-android
+          path: appsrc/metodos_tecnicos_flutter/build/app/outputs/flutter-apk/app-release.apk
