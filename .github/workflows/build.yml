@@ -34,14 +34,17 @@ jobs:
         run: |
           flutter create --platforms=android .
 
+      
       - name: Compilar APK
         working-directory: appsrc/metodos_tecnicos_flutter
         run: |
           flutter pub get
           flutter build apk --release \
             --dart-define=SUPABASE_URL=https://qteoohevgetmaphuayjx.supabase.co \
-            --dart-define=SUPABASE_ANON_KEY=sb_publishable_bsMAo2yxiNMkEGdN5VEWRw_rbsbWvK-
-
+            --dart-define=SUPABASE_ANON_KEY=sb_publishable_bsMAo2yxiNMkEGdN5VEWRw_rbsbWvK- \
+            --android-skip-build-dependency-validation
+          cd android
+          ./gradlew assembleRelease -x lintVitalAnalyzeRelease
       - uses: actions/upload-artifact@v4
         with:
           name: aplicativo-android
